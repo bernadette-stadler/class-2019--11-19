@@ -42,7 +42,7 @@ glimpse(x)
 
 my_list <- dir_ls("2018-live-poll-results-master/data/")
 
-raw <- map_dfr(my_list, ~ read_csv(.x, col_types = cols(
+raw <- map_dfr(my_list, .id = "source", ~ read_csv(.x, col_types = cols(
   .default = col_character(),
   turnout_scale = col_double(),
   turnout_score = col_double(),
@@ -51,5 +51,9 @@ raw <- map_dfr(my_list, ~ read_csv(.x, col_types = cols(
   final_weight = col_double(),
   timestamp = col_datetime(format = "")
 )))
+
+# This will mash all your csv files together in one giant tibble, which isn't very helpful.
+
+# Add .id = "source" into map_dfr to make sure you can see which row came from which csv
 ```
 
