@@ -90,3 +90,13 @@ predict(model, newdata = my_data, type = "response")
 z <-  y %>% mutate(prediction = predict(model, type = "response"))
 ```
 
+```{r}
+y %>% count(dvote, female) %>% group_by(dvote) %>% mutate(percent = n/sum(n))
+
+# comparing actual percent of voters to prediction in model
+
+z %>% group_by(dvote) %>% summarise(avg = mean(prediction))
+
+# seeing how distinct they are 
+```
+
