@@ -9,6 +9,7 @@ output: html_document
 knitr::opts_chunk$set(echo = TRUE)
 library(skimr)
 library(fs)
+library(broom)
 library(tidyverse)
 ```
 
@@ -63,14 +64,29 @@ raw <- map_dfr(my_list, .id = "source", ~ read_csv(.x, col_types = cols(
 y <- raw %>%
   mutate(female = ifelse(gender == "Female", 1, 0)) %>%
   mutate(dvote = ifelse(response == "Dem", 1, 0)) %>%
-  select(female, dvote, response, gender)
+  select(female, dvote, response, gender) 
 ```
 
 ```{r}
 # figure out the relationship between female and dvote
 
-lm(formula = dvote ~ female, data = y)
+model <- glm(formula = dvote ~ female, data = y, family = "binomial")
 
-ggplot(y, aes(x = female, y = dvote)) + geom_jitter() + geom_smooth(method = "lm")
+ggplot(y, aes(x = female, y = dvote)) + geom_smooth(method = "glm")
+
+tidy(model)
+
+glance(model)
+
+```
+
+```{r}
+my_data <- tibble(female = c(0,0,1))
+
+predict(model, newdata = my_data, type = "response")
+```
+
+```{r}
+z <-  y %>% mutate(prediction = predict(model, type = "response"))
 ```
 
