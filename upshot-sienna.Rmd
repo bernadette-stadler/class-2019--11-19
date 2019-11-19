@@ -57,3 +57,18 @@ raw <- map_dfr(my_list, .id = "source", ~ read_csv(.x, col_types = cols(
 # Add .id = "source" into map_dfr to make sure you can see which row came from which csv
 ```
 
+```{r}
+# Create 0/1 for dvote and female
+
+y <- raw %>%
+  mutate(female = ifelse(gender == "Female", 1, 0)) %>%
+  mutate(dvote = ifelse(response == "Dem", 1, 0)) %>%
+  select(female, dvote, response, gender)
+```
+
+```{r}
+lm(formula = dvote ~ female, data = y)
+
+ggplot(y, aes(x = female, y = dvote)) + geom_jitter() + geom_smooth(method = "lm")
+```
+
