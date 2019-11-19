@@ -1,0 +1,55 @@
+---
+title: "upshot-sienna"
+author: "Sophia Freuden"
+date: "11/19/2019"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(skimr)
+library(fs)
+library(tidyverse)
+```
+
+```{r}
+download.file("https://github.com/TheUpshot/2018-live-poll-results/archive/master.zip", destfile = "master.zip")
+
+unzip("master.zip")
+
+x <- read_csv("2018-live-poll-results-master/data/elections-poll-az02-1.csv", col_types = cols(
+  .default = col_character(),
+  turnout_scale = col_double(),
+  turnout_score = col_double(),
+  w_LV = col_double(),
+  w_RV = col_double(),
+  final_weight = col_double(),
+  timestamp = col_datetime(format = "")
+))
+```
+
+```{r}
+x
+
+glimpse(x)
+
+# myfiles <- list.files(path="2018-live-poll-results-master/data", pattern="*.csv", full.names=TRUE)
+# ^this is one way of doing things, but preceptor doesn't like it :(
+```
+
+```{r}
+# Make sure you load fs first!
+
+my_list <- dir_ls("2018-live-poll-results-master/data/")
+
+raw <- map_dfr(my_list, ~ read_csv(.x, col_types = cols(
+  .default = col_character(),
+  turnout_scale = col_double(),
+  turnout_score = col_double(),
+  w_LV = col_double(),
+  w_RV = col_double(),
+  final_weight = col_double(),
+  timestamp = col_datetime(format = "")
+)))
+```
+
