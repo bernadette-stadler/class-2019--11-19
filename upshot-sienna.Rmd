@@ -67,6 +67,8 @@ y <- raw %>%
 ```
 
 ```{r}
+# figure out the relationship between female and dvote
+
 lm(formula = dvote ~ female, data = y)
 
 ggplot(y, aes(x = female, y = dvote)) + geom_jitter() + geom_smooth(method = "lm")
